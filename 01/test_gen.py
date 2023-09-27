@@ -1,0 +1,43 @@
+import unittest
+from io import StringIO
+from generator import search_file
+
+
+class TestSearchFile(unittest.TestCase):
+
+    def setUp(self):
+        self.sample_content = """ Привет всем!
+                                  Это простой тестовый файл
+                                  Розы красные
+                                  Фиалки синие
+                                  Я учусь программировать
+                                  А роза упала на лапу Азора"""
+
+    def test_word_present(self):
+        results = list(search_file(StringIO(self.sample_content), ["Привет"]))
+        self.assertEqual(results, ["Привет всем!"])
+
+    def test_word_absent(self):
+        results = list(search_file(StringIO(self.sample_content), ["Слово"]))
+        self.assertEqual(results, [])
+
+    def test_similar_word_absent(self):
+        results = list(search_file(StringIO(self.sample_content), ["розан"]))
+        self.assertEqual(results, [])
+
+    def test_case_insensitivity(self):
+        results = list(search_file(StringIO(self.sample_content), ["розы"]))
+        self.assertEqual(results, ["Розы красные"])
+
+    def test_exact_word_match(self):
+        results = list(search_file(StringIO(self.sample_content), ["красные"]))
+        self.assertEqual(results, ["Розы красные"])
+
+    def test_file_object(self):
+        with StringIO(self.sample_content) as file_obj:
+            results = list(search_file(file_obj, ["Фиалки"]))
+            self.assertEqual(results, ["Фиалки синие"])
+
+
+if __name__ == '__main__':
+    unittest.main()
