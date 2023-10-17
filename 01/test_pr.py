@@ -41,6 +41,29 @@ class TestPredictMessageMood(unittest.TestCase):
         result = predict_message_mood("Какое-то сообщение 6", self.model)
         self.assertEqual(result, "норм")
 
+    def test_near_boundary_values(self):
+        self.model.predict.return_value = 0.2999
+        result = predict_message_mood("Какое-то сообщение 7", self.model)
+        self.assertEqual(result, "неуд")
+
+        self.model.predict.return_value = 0.3001
+        result = predict_message_mood("Какое-то сообщение 8", self.model)
+        self.assertEqual(result, "норм")
+
+        self.model.predict.return_value = 0.7999
+        result = predict_message_mood("Какое-то сообщение 9", self.model)
+        self.assertEqual(result, "норм")
+
+        self.model.predict.return_value = 0.8001
+        result = predict_message_mood("Какое-то сообщение 10", self.model)
+        self.assertEqual(result, "отл")
+
+    def test_message_to_model(self):
+        message = "Тестовое сообщение"
+        self.model.predict.return_value = 0.5
+        predict_message_mood(message, self.model)
+        self.model.predict.assert_called_once_with(message)
+
 
 if __name__ == "__main__":
     unittest.main()
