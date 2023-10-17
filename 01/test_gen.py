@@ -39,7 +39,8 @@ class TestSearchFile(unittest.TestCase):
         with StringIO(self.sample_content) as file_obj:
             results = list(search_file(file_obj, ["Фиалки"]))
             self.assertEqual(results, ["Фиалки синие"])
-        def test_multiple_matches(self):
+            
+    def test_multiple_matches(self):
         results = list(search_file(StringIO(self.sample_content), ["роза"]))
         self.assertEqual(results, ["А роза упала на лапу Азора", "Роза цветок"])
 
