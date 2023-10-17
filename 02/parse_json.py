@@ -25,10 +25,4 @@ def parse_json(json_str: str, required_fields=None, keywords=None, keyword_callb
 
 def keyword_callback(field, keyword):
     print(f"Keyword '{keyword}' in field '{field}'")
-
-
-json_str = '{"key1": "Word1 word2", "key2": "word2 word3"}'
-required_fields = ["key1"]
-keywords = ["word2"]
-
-parse_json(json_str, required_fields, keywords, keyword_callback)
+    
