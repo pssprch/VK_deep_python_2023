@@ -11,7 +11,9 @@ class TestSearchFile(unittest.TestCase):
                                   Розы красные
                                   Фиалки синие
                                   Я учусь программировать
-                                  А роза упала на лапу Азора"""
+                                  А роза упала на лапу Азора
+                                  Роза цветок
+                                  Игра """
 
     def test_word_present(self):
         results = list(search_file(StringIO(self.sample_content), ["Привет"]))
@@ -37,6 +39,21 @@ class TestSearchFile(unittest.TestCase):
         with StringIO(self.sample_content) as file_obj:
             results = list(search_file(file_obj, ["Фиалки"]))
             self.assertEqual(results, ["Фиалки синие"])
+        def test_multiple_matches(self):
+        results = list(search_file(StringIO(self.sample_content), ["роза"]))
+        self.assertEqual(results, ["А роза упала на лапу Азора", "Роза цветок"])
+
+    def test_case_insensitivity_match(self):
+        results = list(search_file(StringIO(self.sample_content), ["ФИАЛКИ"]))
+        self.assertEqual(results, ["Фиалки синие"])
+
+    def test_matching_several_filters(self):
+        results = list(search_file(StringIO(self.sample_content), ["Привет", "учусь", "файл"]))
+        self.assertEqual(results, ["Привет всем!", "Это простой тестовый файл", "Я учусь программировать"])
+
+    def test_complete_line_match(self):
+        results = list(search_file(StringIO(self.sample_content), ["игра"]))
+        self.assertEqual(results, ["Игра"])
 
 
 if __name__ == '__main__':
