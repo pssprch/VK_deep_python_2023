@@ -40,5 +40,24 @@ class TestParseJson(unittest.TestCase):
         parse_json(" ", keyword_callback=func)
         func.assert_not_called()
 
+    def test_not_cactused(self):
+        func = Mock()
+        json_str = '{"key": "cactused"}'
+        parse_json(json_str, required_fields=["key"], keywords=["cactus"], keyword_callback=func)
+        func.assert_not_called()
+
+    def test_different_conditions_and_registers(self):
+        func = Mock()
+        json_str = '{"Key1": "Word1 word2", "KEY2": "word2 word3", "key3": "WoRd1 word2"}'
+
+        parse_json(json_str, required_fields=["KEY2"], keywords=["word2"], keyword_callback=func)
+        func.assert_called_once_with("KEY2", "word2")
+        func.reset_mock()
+
+        parse_json(json_str, required_fields=["key3"], keywords=["wOrD1"], keyword_callback=func)
+        func.assert_called_once_with("key3", "wOrD1")
+        func.reset_mock()
+
+
 if __name__ == "__main__":
     unittest.main()
