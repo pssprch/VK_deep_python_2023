@@ -56,6 +56,18 @@ class TestSearchFile(unittest.TestCase):
         results = list(search_file(StringIO(self.sample_content), ["игра"]))
         self.assertEqual(results, ["Игра"])
 
+    def test_filters_in_diff_line(self):
+        results = list(search_file(StringIO(self.sample_content), ["Привет", "тестовый", "файл"]))
+        self.assertEqual(results, ["Привет всем!", "Это простой тестовый файл"])
+
+    def test_partial_filters(self):
+        results = list(search_file(StringIO(self.sample_content), ["простой", "тестовый", "файл"]))
+        self.assertEqual(results, ["Это простой тестовый файл"])
+
+    def test_all_filters_in_line(self):
+        results = list(search_file(StringIO(self.sample_content), ["Фиалки", "синие"]))
+        self.assertEqual(results, ["Фиалки синие"])
+
 
 if __name__ == '__main__':
     unittest.main()
