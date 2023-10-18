@@ -2,6 +2,7 @@ import unittest
 from unittest.mock import Mock
 from parse_json import parse_json
 
+
 class TestParseJson(unittest.TestCase):
 
     def setUp(self):
@@ -57,6 +58,21 @@ class TestParseJson(unittest.TestCase):
         parse_json(json_str, required_fields=["key3"], keywords=["wOrD1"], keyword_callback=func)
         func.assert_called_once_with("key3", "wOrD1")
         func.reset_mock()
+
+    def test_mult_required_fields_one_keyword(self):
+        func = Mock()
+        parse_json(self.json_str, required_fields=["key1", "key2"], keywords=["word2"], keyword_callback=func)
+        func.assert_any_call("key1", "word2")
+        func.assert_any_call("key2", "word2")
+        self.assertEqual(func.call_count, 2)
+
+    def test_mult_keywords_one_line(self):
+        func = Mock()
+        json_str_multi_kw = '{"key1": "Word1 word2 word3"}'
+        parse_json(json_str_multi_kw, required_fields=["key1"], keywords=["word1", "word2"], keyword_callback=func)
+        func.assert_any_call("key1", "word1")
+        func.assert_any_call("key1", "word2")
+        self.assertEqual(func.call_count, 2)
 
 
 if __name__ == "__main__":
