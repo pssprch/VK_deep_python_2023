@@ -23,6 +23,26 @@ class TestCustomMetaClass(unittest.TestCase):
         with self.assertRaises(AttributeError):
             _ = inst.custom_not_present
 
+    def test_attribute_access_error(self):
+        inst = CustomClass()
+        with self.assertRaises(AttributeError):
+            _ = inst.x
+        with self.assertRaises(AttributeError):
+            _ = inst.val
+        with self.assertRaises(AttributeError):
+            _ = inst.line
+        with self.assertRaises(AttributeError):
+            _ = inst.yyy
+        with self.assertRaises(AttributeError):
+            _ = inst.dynamic
+
+    def test_instance_creation_asserts(self):
+        inst = CustomClass()
+        self.assertEqual(inst.custom_x, 50)
+        self.assertEqual(inst.custom_val, 99)
+        self.assertEqual(inst.custom_line(), 100)
+        self.assertEqual(str(inst), "Custom_by_metaclass")
+
 
 if __name__ == '__main__':
     unittest.main()
