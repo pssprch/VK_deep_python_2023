@@ -1,14 +1,17 @@
 class PositiveValue:
     def __get__(self, instance, owner):
-        return instance.__dict__[self]
+        return instance.__dict__[self.name]
 
     def __set__(self, instance, value):
-        if value <= 0:
+        if not (value >= 0):
             raise ValueError("Must be positive")
-        instance.__dict__[self] = value
+        instance.__dict__[self.name] = value
 
     def __delete__(self, instance):
-        del instance.__dict__[self]
+        del instance.__dict__[self.name]
+
+    def __set_name__(self, owner, name):
+        self.name = name
 
 
 class Rate:
@@ -39,13 +42,15 @@ class Time:
 
 class Finance:
     principal = PositiveValue()
+    amount = PositiveValue()
     r = Rate()
     t = Time()
 
-    def __init__(self, principal, r, t):
+    def __init__(self, principal, r, t, amount=0):
         self.principal = principal
         self.r = r
         self.t = t
+        self.amount = amount
 
     def compound_interest(self):
         return self.principal * ((1 + self.r / 100) ** self.t) - self.principal
