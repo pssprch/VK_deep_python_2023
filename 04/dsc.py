@@ -3,7 +3,7 @@ class PositiveValue:
         return instance.__dict__[self.name]
 
     def __set__(self, instance, value):
-        if not (value >= 0):
+        if not (value > 0):
             raise ValueError("Must be positive")
         instance.__dict__[self.name] = value
 
