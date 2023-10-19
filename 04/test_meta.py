@@ -11,6 +11,9 @@ class TestCustomMetaClass(unittest.TestCase):
         self.assertEqual(inst.custom_val, 99)
         self.assertEqual(str(inst), "Custom_by_metaclass")
 
+        self.assertTrue(hasattr(CustomClass, 'custom_x'))
+        self.assertTrue(hasattr(CustomClass, 'custom_line'))
+
     def test_dynamic_attributes(self):
         inst = CustomClass()
         inst.dynamic = "added later"
