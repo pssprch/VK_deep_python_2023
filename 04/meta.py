@@ -1,14 +1,17 @@
 class CustomMeta(type):
-
     def __setattr__(cls, key, value):
-        object.__setattr__(cls, "custom_" + key, value)
+        if not (key.startswith('__') and key.endswith('__')):
+            key = "custom_" + key
+        object.__setattr__(cls, key, value)
 
     def __new__(cls, name, bases, clsdict):
-        custom_attr = {
-            **{"custom_" + k: v for k, v in clsdict.items() if not (k.startswith('__') and k.endswith('__'))},
-            **{k: v for k, v in clsdict.items() if k.startswith('__') and k.endswith('__')},
-            '__setattr__': cls.__setattr__
-        }
+        custom_attr = {}
+        for k, v in clsdict.items():
+            if k.startswith('__') and k.endswith('__'):
+                custom_attr[k] = v
+            else:
+                custom_attr["custom_" + k] = v
+        custom_attr['__setattr__'] = cls.__setattr__
         return super().__new__(cls, name, bases, custom_attr)
 
 
