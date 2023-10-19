@@ -7,13 +7,29 @@ class TestDescriptors(unittest.TestCase):
     def test_positive_value(self):
         finance = Finance(1000, 5, 3)
         finance.principal = 2000
-        self.assertEqual(finance.principal, 2000)
 
         with self.assertRaises(ValueError):
-            finance.principal = 0
+            finance.principal = -1
+
+        self.assertEqual(finance.principal, 2000)
+        del finance.principal
+
+    def test_two_values(self):
+        finance = Finance(1000, 5, 3, 1500)
+        self.assertEqual(finance.principal, 1000)
+        self.assertEqual(finance.amount, 1500)
+        finance.principal = 2000
+        finance.amount = 2500
+
+        self.assertEqual(finance.principal, 2000)
+        self.assertEqual(finance.amount, 2500)
+        self.assertEqual(finance.principal, 2000)
+        self.assertEqual(finance.amount, 2500)
+
         with self.assertRaises(ValueError):
             finance.principal = -1
-        del finance.principal
+        with self.assertRaises(ValueError):
+            finance.amount = -1
 
     def test_rate(self):
         finance = Finance(1000, 5, 3)
